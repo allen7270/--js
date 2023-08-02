@@ -88,6 +88,13 @@ function changeDirection(e) {
   window.removeEventListener("keydown", changeDirection);
 }
 
+let highestScore;
+loadHighestScore();
+let socre = 0;
+
+document.getElementById("myScore").innerHTML = "遊戲分數:" + socre;
+document.getElementById("myScore2").innerHTML = "最高分數:" + highestScore;
+
 function draw() {
   // check game over
   for (let i = 1; i < snake.length; i++) {
@@ -155,6 +162,10 @@ function draw() {
   // 判斷是否吃到果實
   if (snake[0].x == myFruit.x && snake[0].y == myFruit.y) {
     myFruit.pickALocation();
+    socre++;
+    setHighestScore(socre);
+    document.getElementById("myScore").innerHTML = "遊戲分數:" + socre;
+    document.getElementById("myScore2").innerHTML = "最高分數:" + highestScore;
   } else {
     snake.pop();
   }
@@ -164,3 +175,18 @@ function draw() {
 }
 
 let myGame = setInterval(draw, 100);
+
+function loadHighestScore() {
+  if (localStorage.getItem("highestScore") == null) {
+    highestScore = 0;
+  } else {
+    highestScore = Number(localStorage.getItem("highestScore"));
+  }
+}
+
+function setHighestScore(score) {
+  if (score > highestScore) {
+    localStorage.setItem("highestScore", score);
+    highestScore = score;
+  }
+}
