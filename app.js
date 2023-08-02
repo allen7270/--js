@@ -10,22 +10,24 @@ const col = canvas.width / unit; // 320 / 20 = 16
 let snake = []; // array中每個元素, 皆是一個物件
 // 物件 -> 儲存x, y座標
 
-snake[0] = {
-  x: 80,
-  y: 0,
-};
-snake[1] = {
-  x: 60,
-  y: 0,
-};
-snake[2] = {
-  x: 40,
-  y: 0,
-};
-snake[3] = {
-  x: 20,
-  y: 0,
-};
+function creatSnake() {
+  snake[0] = {
+    x: 80,
+    y: 0,
+  };
+  snake[1] = {
+    x: 60,
+    y: 0,
+  };
+  snake[2] = {
+    x: 40,
+    y: 0,
+  };
+  snake[3] = {
+    x: 20,
+    y: 0,
+  };
+}
 
 class Fruit {
   constructor() {
@@ -65,6 +67,8 @@ class Fruit {
   }
 }
 
+// init
+creatSnake();
 let myFruit = new Fruit();
 
 window.addEventListener("keydown", changeDirection);
@@ -80,9 +84,20 @@ function changeDirection(e) {
   } else if (e.key == "ArrowUp" && d != "Down") {
     d = "Up";
   }
+
+  window.removeEventListener("keydown", changeDirection);
 }
 
 function draw() {
+  // check game over
+  for (let i = 1; i < snake.length; i++) {
+    if (snake[i].x == snake[0].x && snake[i].y == snake[0].y) {
+      clearInterval(myGame);
+      alert("game over");
+      return;
+    }
+  }
+
   // init backgrund
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -144,6 +159,8 @@ function draw() {
     snake.pop();
   }
   snake.unshift(newHead);
+
+  window.addEventListener("keydown", changeDirection);
 }
 
 let myGame = setInterval(draw, 100);
