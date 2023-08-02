@@ -27,14 +27,60 @@ snake[3] = {
   y: 0,
 };
 
-for (let i = 0; i < snake.length; i++) {
-  if (i == 0) {
-    ctx.fillStyle = "lightgreen";
-  } else {
-    ctx.fillStyle = "lightblue";
+window.addEventListener("keydown", changeDirection);
+let d = "Right";
+
+function changeDirection(e) {
+  if (e.key == "ArrowRight" && d != "Left") {
+    d = "Right";
+  } else if (e.key == "ArrowDown" && d != "Up") {
+    d = "Down";
+  } else if (e.key == "ArrowLeft" && d != "Right") {
+    d = "Left";
+  } else if (e.key == "ArrowUp" && d != "Down") {
+    d = "Up";
   }
-  ctx.strokeStyle = "white";
-  // (x, y, width, height)
-  ctx.fillRect(snake[i].x, snake[i].y, unit, unit);
-  ctx.strokeRect(snake[i].x, snake[i].y, unit, unit);
 }
+
+function draw() {
+  // init backgrund
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // draw snake
+  for (let i = 0; i < snake.length; i++) {
+    if (i == 0) {
+      ctx.fillStyle = "lightgreen";
+    } else {
+      ctx.fillStyle = "lightblue";
+    }
+    ctx.strokeStyle = "white";
+    // (x, y, width, height)
+    ctx.fillRect(snake[i].x, snake[i].y, unit, unit);
+    ctx.strokeRect(snake[i].x, snake[i].y, unit, unit);
+  }
+
+  // 以目前d 變數方向決定蛇下一幀要放哪個座標
+  let snakeX = snake[0].x;
+  let snakeY = snake[0].y;
+  if (d == "Left") {
+    snakeX -= unit;
+  } else if (d == "Up") {
+    snakeY -= unit;
+  } else if (d == "Right") {
+    snakeX += unit;
+  } else if (d == "Down") {
+    snakeY += unit;
+  }
+
+  let newHead = {
+    x: snakeX,
+    y: snakeY,
+  };
+
+  // 判斷是否吃到果實
+  snake.pop();
+  snake.unshift(newHead);
+}
+
+let myGame = setInterval(draw, 100);
